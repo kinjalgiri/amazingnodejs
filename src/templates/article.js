@@ -1,23 +1,30 @@
 import React from "react"
 import { Link, graphql } from "gatsby"
 import Layout from "../components/layout"
+import Img from "gatsby-image"
+import TimeAgo from 'react-timeago'
 
 const ArticleTemplate = ({ data }) => (
   <Layout>
-      <article class="blog-post px-3 py-5 p-md-5">
-        <div class="container">
-          <header class="blog-post-header">
-          <h2 class="title mb-2">{data.strapiArticle.title}</h2>
-          <div class="meta mb-3"><span class="date">Published 3 months ago       by{" "}
+      <article className="blog-post px-3 py-5 p-md-5">
+        <div className="container">
+          <header className="blog-post-header">
+          <h2 className="title mb-2">{data.strapiArticle.title} </h2>
+          <div className="meta mb-3">
+            <span className="date">Published <TimeAgo date={data.strapiArticle.updatedAt} /> by{" "}
             <Link to={`/authors/${data.strapiArticle.user.id}`}>
               {data.strapiArticle.user.username}
-            </Link></span><span class="time">5 min read</span><span class="comment"><a href="#">4 comments</a></span></div>
+            </Link>
+            </span>
+          </div>
           </header>
-          
-          <div class="blog-post-body">
-            <figure class="blog-banner">
-                <a href="https://made4dev.com"><img class="img-fluid" src="assets/images/blog/blog-post-banner.jpg" alt="image" /></a>
-                <figcaption class="mt-2 text-center image-caption">Image Credit: <a href="https://made4dev.com?ref=devblog" target="_blank">made4dev.com (Premium Programming T-shirts)</a></figcaption>
+
+          <div className="blog-post-body">
+            <figure className="blog-banner">
+                <a href="https://made4dev.com">
+<Img fluid={data.strapiArticle.image.childImageSharp.fluid} />
+                </a>
+                <figcaption className="mt-2 text-center image-caption">Image Credit: <a href="https://made4dev.com?ref=devblog" target="_blank">made4dev.com (Premium Programming T-shirts)</a></figcaption>
           </figure>
           {data.strapiArticle.description}
           </div>
@@ -33,6 +40,14 @@ export const query = graphql`
     strapiArticle(slug: { eq: $slug }) {
       title
       description
+      updatedAt
+      image {
+        childImageSharp {
+          fluid(maxWidth: 960) {
+            ...GatsbyImageSharpFluid
+          }
+        }
+      }
       user {
         id
         username
